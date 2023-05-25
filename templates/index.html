@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Protein visualizer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <style>
+       #matrix {
+           overflow-x: scroll;
+           overflow-y: scroll;
+           height: 600px;
+           width: 800px;
+           display: block;
+       }
+    </style>
+</head>
+<body>
+    <h1>Protein visualizer</h1>
+    <form action="/" method="post">
+        <p>
+            <label for="pdbId">Enter PDB structure Id</label>
+            <input type="text" name="pdbId" value="{{ pdbId }}">
+        </p>
+        <p>
+            <label for="proSitePatternId">Enter PROSITE pattern id</label>
+            <input type="text" name="proSitePatternId" value="{{ proSitePatternId }}">
+        </p>
+        <p>
+            <label for="distanceThreshold">Distance threshold</label>
+            <input type="text" name="distanceThreshold" value="{{ distanceThreshold }}">
+        </p>
+        <p>
+            <label for="selectedChain">Select a chain to highlight</label>
+            <input type="text" name="selectedChain" value="{{ selectedChain }}">
+        </p>
+        <p>
+            <input type="submit">
+        </p>
+    </form>
+    <div id="molecule">
+        <h2>3D molecule structure</h2>
+        {{ molecule | safe }}
+    </div>
+    <div>
+        <h2>Pseudosequence</h2>
+        <p>Prosite pattern: {{ pattern }}</p>
+        <p id="pseudosequence">{{ pseudosequence }}</p>
+    </div>
+    <div id="intervals">
+        <h2>Pseudosequences intervals</h2>
+        <table>
+        {% for interval in intervals %}
+            <tr>
+                <td><span>Start: {{ interval[0] }}.</span></td>
+                <td><span>Stop: {{ interval[1] - 1 }}.</span></td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+    <div id="chains">
+        <h2>PDB MHC chains</h2>
+        <ul>
+        {% for chain in chains %}
+            <li>Chain id={{ chain.id }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div id="matrix">
+        <h2>Matrix of distances</h2>
+        <div>
+            <table>
+            {% for row in matrix %}
+                <tr>
+                {% for elem in row %}
+                    <td style="background-color: {{ elem[1] }}; width: 100px;">
+                        <span>{{ elem[0] }}</span>
+                    </td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+    </div>
+</body>
